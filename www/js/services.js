@@ -1,8 +1,21 @@
+var db;
+var remoteDB;
+
 angular.module('starter.services', ['pouchdb'])
 .factory('NotesFactory', function(pouchDB) {
-     
+    
+    db = new pouchDB('notes');
+    remoteDB = new PouchDB('http://52.88.243.149:5984/notes');
+ 
+ db.sync(remoteDB, {
+  live: true
+}).on('change', function (change) {
+  // yo, something changed!
+}).on('error', function (err) {
+  // yo, we got an error! (maybe the user went offline?)
+});
+    
     var factory = {}; 
-    	var db = pouchDB('notes');
 
     	factory.notes = [];
 
@@ -41,9 +54,14 @@ angular.module('starter.services', ['pouchdb'])
 		    factory.notes.push(res);
 		 }
 
+		 function sync() {
+		 	 db.sync(remoteDB);
+		 }
+
 		  db.post(note)
 		    .then(get)
 		    .then(bind)
+		    .then(sync)
 		    .catch(error);
     }
  
