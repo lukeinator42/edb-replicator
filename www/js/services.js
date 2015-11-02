@@ -5,15 +5,18 @@ angular.module('starter.services', ['pouchdb'])
 .factory('NotesFactory', function(pouchDB) {
     
     db = new pouchDB('notes');
-    remoteDB = new PouchDB('http://52.88.243.149:5984/notes');
+    remoteDB = new PouchDB('http://127.0.0.1:5984/notes');
  
- db.sync(remoteDB, {
-  live: true
-}).on('change', function (change) {
-  // yo, something changed!
-}).on('error', function (err) {
-  // yo, we got an error! (maybe the user went offline?)
-});
+	 db.sync(remoteDB, {
+	  live: true
+	}).on('change', function (change) {
+	  // yo, something changed!
+	  console.log("changed! ");
+	  console.log(change);
+
+	}).on('error', function (err) {
+	  // yo, we got an error! (maybe the user went offline?)
+	});
     
     var factory = {}; 
 
